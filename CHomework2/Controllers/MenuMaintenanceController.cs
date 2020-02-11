@@ -23,13 +23,9 @@ namespace CHomework2.Controllers
             }
             else
             {
-                var menuNo = db.Menus.ToList();
-                var menuName = db.Menus.ToList();
-                var menus = db.Menus.ToList();
-                List<Menu> list = new List<Menu>();
                 var viewModel = new Menu();
-                viewModel.ListA = menuNo;
-                viewModel.ListC = list;
+                viewModel.ListA = db.Menus.ToList();
+                viewModel.ListC = new List<Menu>();
                 try
                 {
                     int loginAccount = (int)Session["LoginID"];
@@ -108,9 +104,6 @@ namespace CHomework2.Controllers
 
         public Menu query(FormCollection form)
         {
-            var menuNo = db.Menus.ToList();
-            var menuName = db.Menus.ToList();
-            var menus = db.Menus.ToList();
             var viewModel = new Menu();
             var selectMenuNo = form["SelectMenuNo"];
             var selectMenuName = form["SelectMenuName"];
@@ -121,24 +114,27 @@ namespace CHomework2.Controllers
             LoginInfo loginInfo = new LoginInfo();
             viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
 
+            viewModel.ListA = db.Menus.ToList();
+            viewModel.ListC = db.Menus.ToList();
+
             if (selectMenuNo != "All")
             {
-                menus = db.Menus.Where(m => m.MenuNo == selectMenuNo).ToList();
+                viewModel.ListC = db.Menus.Where(m => m.MenuNo == selectMenuNo).ToList();
             }
             if (selectMenuName != "All")
             {
-                menus = db.Menus.Where(m => m.LinkName == selectMenuName).ToList();
+                viewModel.ListC = db.Menus.Where(m => m.LinkName == selectMenuName).ToList();
             }
 
             if (selectType != "All")
             {
                 if (selectType == "Menu")
                 {
-                    menus = db.Menus.Where(m => m.LinkType == 0).ToList();
+                    viewModel.ListC = db.Menus.Where(m => m.LinkType == 0).ToList();
                 }
                 else if (selectType == "Program")
                 {
-                    menus = db.Menus.Where(m => m.LinkType == 1).ToList();
+                    viewModel.ListC = db.Menus.Where(m => m.LinkType == 1).ToList();
                 }
             }
 
@@ -146,15 +142,14 @@ namespace CHomework2.Controllers
             {
                 if (selectStatus == "Y")
                 {
-                    menus = db.Menus.Where(m => m.Status == 1).ToList();
+                    viewModel.ListC = db.Menus.Where(m => m.Status == 1).ToList();
                 }
                 else if (selectStatus == "N")
                 {
-                    menus = db.Menus.Where(m => m.Status == 0).ToList();
+                    viewModel.ListC = db.Menus.Where(m => m.Status == 0).ToList();
                 }
             }
-            viewModel.ListA = db.Menus.ToList();
-            viewModel.ListC = menus;
+            
             return viewModel;
         }
 
@@ -176,9 +171,6 @@ namespace CHomework2.Controllers
 
         public ActionResult Modify(FormCollection form, Menu menu)
         {
-            var menuNo = db.Menus.ToList();
-            var menuName = db.Menus.ToList();
-            var menus = db.Menus.ToList();
             var viewModel = new Menu();
 
             int loginID = (int)Session["LoginID"];
@@ -220,21 +212,14 @@ namespace CHomework2.Controllers
             Update_Menu.ModifyUser = userName;
             db.SaveChanges();
 
-            menuNo = db.Menus.ToList();
-            menuName = db.Menus.ToList();
-            menus = db.Menus.ToList();
-
-            viewModel.ListA = menuNo;
-            viewModel.ListC = menus;
+            viewModel.ListA = db.Menus.ToList();
+            viewModel.ListC = db.Menus.ToList();
 
             return View("Index", viewModel);
         }
 
         public Menu delete(FormCollection form)
         {
-            var menuNo = db.Menus.ToList();
-            var menuName = db.Menus.ToList();
-            var menus = db.Menus.ToList();
             var viewModel = new Menu();
             List<Role> dropRoles = new List<Role>();
 
@@ -253,12 +238,8 @@ namespace CHomework2.Controllers
             LoginInfo loginInfo = new LoginInfo();
             viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
 
-            menuNo = db.Menus.ToList();
-            menuName = db.Menus.ToList();
-            menus = db.Menus.ToList();
-
-            viewModel.ListA = menuNo;
-            viewModel.ListC = menus;
+            viewModel.ListA = db.Menus.ToList();
+            viewModel.ListC = db.Menus.ToList();
             return viewModel;
         }
 
