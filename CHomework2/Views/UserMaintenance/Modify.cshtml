@@ -1,0 +1,218 @@
+﻿@model CHomework2.Models.User
+@{
+    Layout = null;
+    if (Session["LoginID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>RoleMaintenance</title>
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        /* Fixed sidenav, full height */
+        .sidenav {
+            height: 100%;
+            width: 300px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+            /* Style the sidenav links and the dropdown button */
+            .sidenav a, .dropdown-btn {
+                padding: 6px 8px 6px 16px;
+                text-decoration: none;
+                font-size: 20px;
+                color: #818181;
+                display: block;
+                border: none;
+                background: none;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+                outline: none;
+            }
+
+                /* On mouse-over */
+                .sidenav a:hover, .dropdown-btn:hover {
+                    color: #f1f1f1;
+                }
+
+        /* Main content */
+        .main {
+            margin-left: 300px; /* Same as the width of the sidenav */
+            font-size: 20px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+        }
+
+        /* Add an active class to the active dropdown button */
+        .active {
+            background-color: green;
+            color: white;
+        }
+
+        /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+        .dropdown-container {
+            display: none;
+            background-color: #262626;
+            padding-left: 8px;
+        }
+
+        /* Optional: Style the caret down icon */
+        .fa-caret-down {
+            float: right;
+            padding-right: 8px;
+        }
+
+        table {
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            cursor: pointer;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+    </style>
+
+    <!-- choose a theme file -->
+    <link rel="stylesheet" href="/path/to/theme.default.css">
+    <!-- load jQuery and tablesorter scripts -->
+    <script type="text/javascript" src="/path/to/jquery-latest.js"></script>
+    <script type="text/javascript" src="/path/to/jquery.tablesorter.js"></script>
+
+    <!-- tablesorter widgets (optional) -->
+    <script type="text/javascript" src="/path/to/jquery.tablesorter.widgets.js"></script>
+
+
+</head>
+<body>
+    <div class="sidenav">
+        <a href="/Home">Home</a>
+        @foreach (var title in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 1))
+        {
+            <button class="dropdown-btn">
+                @title.LinkName
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-container">
+                @foreach (var menu in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 2 && m.MenuNo.Contains(title.MenuNo)))
+                {
+                    if (menu.Status == 1)
+                    {<a href="@menu.LinkURL">@menu.LinkName</a>}
+                }
+            </div>
+        }
+    </div>
+
+    <div class="main">
+        <h2>User Maintenance</h2>
+        @using (Html.BeginForm("Modify", "UserMaintenance", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(model => model.UserName)</td>
+                    <td><input name="userName" value="@Model.ListB.First().UserName" /></td>
+                    <td><input type="hidden" name="userID" value="@Model.ListB.First().UserID" /></td>
+                </tr>
+                <tr>
+                    <td>Role</td>
+                    <td>
+                        <select name="SelectRole">
+                            <option>@Model.ListB.First().Role.RoleName</option>
+                            @foreach (var item in Model.ListA)
+                            {
+                                if (@item.RoleName != Model.ListB.First().Role.RoleName)
+                                {
+                                    <option> @item.RoleName</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                    <td>Status: </td>
+                    <td>
+                        <select name="SelectStatus">
+                            @if (@Model.ListB.First().Status == 0)
+                            {
+                                <option>N</option>
+                                <option>Y</option>
+                            }
+                            else
+                            {
+                                <option>Y</option>
+                                <option>N</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <td>
+                    <input type="submit" name="name" value="Save" />
+                    <input type="button" value="Back" onclick="history.back()">
+                </td>
+            </table>
+        }
+    </div>
+
+    <script>
+        /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+        var dropdown = document.getElementsByClassName("dropdown-btn");
+        var i;
+
+        for (i = 0; i < dropdown.length; i++) {
+            dropdown[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.display === "block") {
+                    dropdownContent.style.display = "none";
+                } else {
+                    dropdownContent.style.display = "block";
+                }
+            });
+        }
+
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

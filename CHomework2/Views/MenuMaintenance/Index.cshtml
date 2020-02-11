@@ -1,0 +1,284 @@
+﻿@model CHomework2.Models.Menu
+@{
+    Layout = null;
+    if (Session["LoginID"] == null)
+    {
+        Response.Redirect("~/Login/Index");
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MenuMaintenance</title>
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        /* Fixed sidenav, full height */
+        .sidenav {
+            height: 100%;
+            width: 300px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+            /* Style the sidenav links and the dropdown button */
+            .sidenav a, .dropdown-btn {
+                padding: 6px 8px 6px 16px;
+                text-decoration: none;
+                font-size: 20px;
+                color: #818181;
+                display: block;
+                border: none;
+                background: none;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+                outline: none;
+            }
+
+                /* On mouse-over */
+                .sidenav a:hover, .dropdown-btn:hover {
+                    color: #f1f1f1;
+                }
+
+        /* Main content */
+        .main {
+            margin-left: 300px; /* Same as the width of the sidenav */
+            font-size: 20px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+        }
+
+        /* Add an active class to the active dropdown button */
+        .active {
+            background-color: green;
+            color: white;
+        }
+
+        /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+        .dropdown-container {
+            display: none;
+            background-color: #262626;
+            padding-left: 8px;
+        }
+
+        /* Optional: Style the caret down icon */
+        .fa-caret-down {
+            float: right;
+            padding-right: 8px;
+        }
+    </style>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- TableSorter-->
+    <script src="~/Scripts/tablesorter.js"></script>
+    <!-- Initializing TableSorter-->
+    <script>
+        $(document).ready(function () {
+            $("#myTable").tablesorter();
+        });
+    </script>
+
+    <!-- Styling -->
+    <style>
+        th.headerSortUp {
+            background-image: url(/image/asc.gif);
+            background-color: #3399FF;
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+
+        th.headerSortDown {
+            background-image: url(/image/desc.gif);
+            background-color: #3399FF;
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidenav">
+        <a href="/Home">Home</a>
+        @foreach (var title in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 1).OrderBy(m => m.MenuNo))
+        {
+            <button class="dropdown-btn">
+                @title.LinkName
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-container">
+                @foreach (var menu in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 2 && m.MenuNo.Contains(title.MenuNo)))
+                {
+                    if (menu.Status == 1) { <a href="@menu.LinkURL">@menu.LinkName</a>}   
+                }
+            </div>
+        }
+    </div>
+
+    <div class="main">
+        <h2>Menu Maintenance</h2>
+        @using (Html.BeginForm("function", "MenuMaintenance", FormMethod.Post))
+        {
+            if (TempData["SelectionMessage"] != null)
+            {
+                <script>
+                alert('@TempData["SelectionMessage"]');
+                </script>
+            }
+            <table>
+                <tr>
+                    <td>Menu No.</td>
+                    <td>
+                        <select name="SelectMenuNo">
+                            <option>All</option>
+                            @foreach (var item in Model.ListA)
+                            {
+                                <option> @item.MenuNo</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ttile :</td>
+                    <td>
+                        <select name="SelectMenuName">
+                            <option>All</option>
+                            @foreach (var item in Model.ListA)
+                            {
+                                <option> @item.LinkName</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Link Type: </td>
+                    <td>
+                        <select name="SelectType">
+                            <option>All</option>
+                            <option>Menu</option>
+                            <option>Program</option>
+                        </select>
+                    </td>
+                    <td></td>
+                    <td>Status: </td>
+                    <td>
+                        <select name="SelectStatus">
+                            <option>All</option>
+                            <option>Y</option>
+                            <option>N</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td><input type="submit" name="button" value="Query" /></td>
+                    <td><input type="submit" name="button" value="Add" /></td>
+                    <td><input type="submit" name="button" value="Modify" /></td>
+                    <td><input type="submit" name="button" value="Delete" onClick="return confirm('Are you sure you want to delete selected data?')" /></td>
+                    <td><input type="submit" name="button" value="Download" onClick="GetTableValues()"></td>
+                </tr>
+            </table>
+
+
+            <table class="table" id="myTable">
+                <thead>
+                    <tr>
+                        <td><input type="checkbox" name="checkAll" onclick="toggle(this)"></td>
+                        <th> Menu No.</th>
+                        <th> Level</th>
+                        <th> Status</th>
+                        <th> Link type</th>
+                        <th> Link URL</th>
+                        <th> Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListC)
+                    {
+
+                        <tr>
+                            <td><input type="checkbox" name="checkbox" value=@item.MenuNo.ToString()></td>
+                            <td>@item.MenuNo</td>
+                            <td>@item.MenuLevel</td>
+                            <td>@item.LinkName</td>
+                            <td>@item.LinkType</td>
+                            <td>@item.LinkURL</td>
+                            @if (@item.Status == 0)
+                            {
+                                <td>N</td> }
+                            else
+                            {
+                                <td>Y</td>}
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <input type="hidden" name="MenuJSON" />
+
+        }
+    </div>
+
+    <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script type="text/javascript">
+        /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+        var dropdown = document.getElementsByClassName("dropdown-btn");
+        var i;
+
+        for (i = 0; i < dropdown.length; i++) {
+            dropdown[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.display === "block") {
+                    dropdownContent.style.display = "none";
+                } else {
+                    dropdownContent.style.display = "block";
+                }
+            });
+        }
+
+        function toggle(source) {
+            checkboxes = document.getElementsByName('checkbox');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+
+        function GetTableValues() {
+            //Create an Array to hold the Table values.
+            var menus = new Array();
+            //Reference the Table.
+            var table = document.getElementById("myTable");
+            //Loop through Table Rows.
+            for (var i = 1; i < table.rows.length; i++) {
+                //Reference the Table Row.
+                var row = table.rows[i];
+                //Copy values from Table Cell to JSON object.
+                var menu = {};
+                menu.MenuNo = row.cells[1].innerHTML;
+                menu.MenuLevel = row.cells[2].innerHTML;
+                menu.LinkName = row.cells[3].innerHTML;
+                menu.LinkType = row.cells[4].innerHTML;
+                menu.LinkURL = row.cells[5].innerHTML;
+                menu.Status = row.cells[6].innerHTML;
+                menus.push(menu);
+            }
+            //Convert the JSON object to string and assign to Hidden Field.
+            document.getElementsByName("MenuJSON")[0].value = JSON.stringify(menus);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+﻿@model CHomework2.Models.LoginInfo
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <style>
+        #login-div {
+            position: absolute;
+            left: 40%;
+            top: 40%;
+            border: 1px solid #ccc;
+            padding: 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-div">
+        @using (Html.BeginForm("Autherize", "Login", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td></td>
+                    <td style="text-decoration: underline">App Name</td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(model => model.LoginName)
+                    </td>
+                    <td>
+                        @Html.EditorFor(model => model.LoginName,
+                   new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.LoginName } })
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>@Html.ValidationMessageFor(model => model.LoginName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.LoginPassword)</td>
+                    <td>
+                        @Html.EditorFor(model => model.LoginPassword,
+                   new { htmlAttributes = new { @class = "form-control", @Value =  ViewBag.LoginPassword } })
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>@Html.ValidationMessageFor(model => model.LoginPassword)</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.CheckBoxFor(model => model.Remember)
+                        @Html.LabelFor(model => model.Remember)
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label class=" field-validation-error">
+                            @Html.DisplayFor(model => model.LoginErrorMessage)
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" name="name" value="Login" />
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+
+</body>
+</html>
