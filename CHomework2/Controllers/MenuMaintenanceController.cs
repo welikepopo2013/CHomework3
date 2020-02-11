@@ -29,7 +29,6 @@ namespace CHomework2.Controllers
                 List<Menu> list = new List<Menu>();
                 var viewModel = new Menu();
                 viewModel.ListA = menuNo;
-                viewModel.ListB = menuName;
                 viewModel.ListC = list;
                 try
                 {
@@ -55,7 +54,6 @@ namespace CHomework2.Controllers
             int loginAccount = (int)Session["LoginID"];
             
             viewModel.ListA = db.Menus.ToList();
-            viewModel.ListB = db.Menus.ToList();
             viewModel.ListC = new List<Menu>();
             viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
 
@@ -75,18 +73,18 @@ namespace CHomework2.Controllers
             {
                 if (select_menu(form).Count() == 1)
                 {
-                    viewModel.ListB = select_menu(form);
+                    viewModel.ListA = select_menu(form);
                     return View("Modify", viewModel);
                 }
                 else if (select_menu(form).Count() == 0)
                 {
-                    viewModel.ListB = db.Menus.ToList();
+                    viewModel.ListA = db.Menus.ToList();
                     TempData["SelectionMessage"] = "Plese select atleast one menu to modify.";
                     return View("Index", viewModel);
                 }
                 else
                 {
-                    viewModel.ListB = db.Menus.ToList();
+                    viewModel.ListA = db.Menus.ToList();
                     TempData["SelectionMessage"] = "Plese modify one menu at a time.";
                     return View("Index", viewModel);
                 }
@@ -155,9 +153,7 @@ namespace CHomework2.Controllers
                     menus = db.Menus.Where(m => m.Status == 0).ToList();
                 }
             }
-
             viewModel.ListA = db.Menus.ToList();
-            viewModel.ListB = db.Menus.ToList();
             viewModel.ListC = menus;
             return viewModel;
         }
@@ -229,7 +225,6 @@ namespace CHomework2.Controllers
             menus = db.Menus.ToList();
 
             viewModel.ListA = menuNo;
-            viewModel.ListB = menuName;
             viewModel.ListC = menus;
 
             return View("Index", viewModel);
@@ -263,7 +258,6 @@ namespace CHomework2.Controllers
             menus = db.Menus.ToList();
 
             viewModel.ListA = menuNo;
-            viewModel.ListB = menuName;
             viewModel.ListC = menus;
             return viewModel;
         }
@@ -360,7 +354,6 @@ namespace CHomework2.Controllers
             menus = db.Menus.ToList();
 
             viewModel.ListA = menuNo;
-            viewModel.ListB = menuName;
             viewModel.ListC = menus;
 
             return View("Index", viewModel);

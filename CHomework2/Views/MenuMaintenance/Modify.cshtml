@@ -104,19 +104,19 @@
             <table>
                 <tr>
                     <td>@Html.LabelFor(model => model.MenuNo)</td>
-                    <td><input name="Menu_No" value="@Model.ListB.First().MenuNo" disabled /></td>
-                    <td><input type="hidden" name="Origin_Menu_No" value="@Model.ListB.First().MenuNo"></td>
+                    <td><input name="Menu_No" value="@Model.ListA.First().MenuNo" disabled /></td>
+                    <td><input type="hidden" name="Origin_Menu_No" value="@Model.ListA.First().MenuNo"></td>
                 </tr>
                 <tr>
                     <td>@Html.LabelFor(model => model.LinkName)</td>
-                    <td><input name="Menu_Name" value="@Model.ListB.First().LinkName"></td>
+                    <td><input name="Menu_Name" value="@Model.ListA.First().LinkName"></td>
 
                 </tr>
                 <tr>
                     <td>Link Type: </td>
                     <td>
                         <select name="SelectType">
-                            @if (@Model.ListB.First().LinkType == 0)
+                            @if (@Model.ListA.First().LinkType == 0)
                             {
                                 <option>Menu</option>
                                 <option>Program</option>
@@ -131,7 +131,7 @@
                     <td>Status: </td>
                     <td>
                         <select name="SelectStatus">
-                            @if (@Model.ListB.First().LinkType == 0)
+                            @if (@Model.ListA.First().LinkType == 0)
                             {
                                 <option>N</option>
                                 <option>Y</option>
@@ -146,13 +146,13 @@
                     <td>Level: </td>
                     <td>
                         <select name="SelectStatus">
-                            @if (@Model.ListB.First().MenuLevel == 0)
+                            @if (@Model.ListA.First().MenuLevel == 0)
                             {
                                 <option>0</option>
                                 <option>1</option>
                                 <option>2</option>
                             }
-                            else if (@Model.ListB.First().MenuLevel == 1)
+                            else if (@Model.ListA.First().MenuLevel == 1)
                             {
                                 <option>1</option>
                                 <option>0</option>

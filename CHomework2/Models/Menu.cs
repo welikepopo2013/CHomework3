@@ -46,7 +46,6 @@ namespace CHomework2.Models
         public virtual ICollection<Role> Roles { get; set; }
 
         public List<Menu> ListA { get; set; }
-        public List<Menu> ListB { get; set; }
         public List<Menu> ListC { get; set; }
         public LoginInfo sideNav { get; set; }
     }
