@@ -160,6 +160,105 @@ namespace CHomework2.Controllers
             return viewModel;
         }
 
+        public ActionResult Add(FormCollection form, Menu menu)
+        {
+            var menuNo = db.Menus.ToList();
+            var viewModel = new Menu();
+            var newMenu = new Menu();
+            var calMenu = new Menu();
+
+            var MenuName = form["menuName"];
+            var MenuGroup = form["SelectMenu"];
+            var MenuLink = form["LinkURL"];
+
+            string newMenuNo = "";
+            int newMenuNoInt = 0;
+            byte newLinkType = 0;
+            byte newMenuLevel = 0;
+
+            int loginID = (int)Session["LoginID"];
+            var userInfo = db.Users.Where(l => l.UserID == loginID).FirstOrDefault();
+            var userName = userInfo.UserID;
+
+            viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginID).FirstOrDefault();
+
+            try
+            {
+                if (MenuGroup == "This is a new Menu Group")
+                {
+                    calMenu = db.Menus.Where(m => m.MenuLevel == 1).OrderByDescending(m => m.MenuNo).FirstOrDefault();
+                    newMenuNo = calMenu.MenuNo;
+                    newMenuNoInt = int.Parse(newMenuNo) + 1;
+                    newMenuNo = "00" + newMenuNoInt.ToString();
+                    newLinkType = 0;
+                    newMenuLevel = 1;
+
+
+                }
+                else if (MenuGroup != "This is a new Menu Group")
+                {
+                    foreach (var each in menuNo)
+                    {
+                        if (MenuGroup == each.LinkName)
+                        {
+                            calMenu = db.Menus.Where(m => m.MenuNo.Contains(each.MenuNo)).OrderByDescending(m => m.MenuNo).FirstOrDefault();
+                            System.Diagnostics.Debug.WriteLine(calMenu.MenuNo);
+                            if (calMenu.MenuNo == each.MenuNo)
+                            {
+                                newMenuNo = calMenu.MenuNo;
+                                newMenuNoInt = int.Parse(newMenuNo) * 10 + 1;
+                                newMenuNo = "00" + newMenuNoInt.ToString();
+                            }
+                            else
+                            {
+                                newMenuNo = calMenu.MenuNo;
+                                newMenuNoInt = int.Parse(newMenuNo) + 1;
+                                newMenuNo = "00" + newMenuNoInt.ToString();
+                            }
+                            newLinkType = 1;
+                            newMenuLevel = 2;
+                        }
+                    }
+                }
+
+                newMenu.MenuNo = newMenuNo;
+                newMenu.LinkType = newLinkType;
+                newMenu.LinkName = MenuName;
+                if (newMenuLevel == 1)
+                {
+                    newMenu.LinkURL = null;
+                }
+                else
+                {
+                    newMenu.LinkURL = MenuLink;
+                }
+
+                if (form["SelectStatus"] == "Y")
+                {
+                    newMenu.Status = 1;
+                }
+                else { newMenu.Status = 0; }
+                newMenu.MenuLevel = newMenuLevel;
+                newMenu.CeateDate = DateTime.Now;
+                newMenu.Createuser = userName;
+                newMenu.ModifyDate = DateTime.Now;
+                newMenu.ModifyUser = userName;
+                db.Menus.Add(newMenu);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+            }
+
+            viewModel.ListA = db.Menus.ToList();
+            viewModel.ListC = db.Menus.ToList();
+
+            return View("Index", viewModel);
+        }
+
         public List<Menu> select_menu(FormCollection form)
         {
             List<Menu> listCheck = new List<Menu>();
@@ -265,104 +364,6 @@ namespace CHomework2.Controllers
             viewModel.ListA = db.Menus.ToList();
             viewModel.ListC = db.Menus.ToList();
             return viewModel;
-        }
-
-        public ActionResult Add(FormCollection form, Menu menu)
-        {
-            var menuNo = db.Menus.ToList();
-            var viewModel = new Menu();
-            var newMenu = new Menu();
-            var calMenu = new Menu();
-
-            var MenuName = form["menuName"];
-            var MenuGroup = form["SelectMenu"];
-            var MenuLink = form["LinkURL"];
-
-            string newMenuNo = "";
-            int newMenuNoInt = 0;
-            byte newLinkType = 0;
-            byte newMenuLevel = 0;
-
-            int loginID = (int)Session["LoginID"];
-            var userInfo = db.Users.Where(l => l.UserID == loginID).FirstOrDefault();
-            var userName = userInfo.UserID;
-
-            LoginInfo loginInfo = new LoginInfo();
-            viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginID).FirstOrDefault();
-
-            try {
-                if (MenuGroup == "This is a new Menu Group")
-                {
-                    calMenu = db.Menus.Where(m => m.MenuLevel == 1).OrderByDescending(m => m.MenuNo).FirstOrDefault();
-                    newMenuNo = calMenu.MenuNo;
-                    newMenuNoInt = int.Parse(newMenuNo) + 1;
-                    newMenuNo = "00" + newMenuNoInt.ToString();
-                    newLinkType = 0;
-                    newMenuLevel = 1;
-
-
-                }
-                else if (MenuGroup != "This is a new Menu Group")
-                {
-                    foreach (var each in menuNo)
-                    {
-                        if (MenuGroup == each.LinkName)
-                        {
-                            calMenu = db.Menus.Where(m => m.MenuNo.Contains(each.MenuNo)).OrderByDescending(m => m.MenuNo).FirstOrDefault();
-                            System.Diagnostics.Debug.WriteLine(calMenu.MenuNo);
-                            if (calMenu.MenuNo == each.MenuNo)
-                            {
-                                newMenuNo = calMenu.MenuNo;
-                                newMenuNoInt = int.Parse(newMenuNo) * 10 + 1;
-                                newMenuNo = "00" + newMenuNoInt.ToString();
-                            }
-                            else
-                            {
-                                newMenuNo = calMenu.MenuNo;
-                                newMenuNoInt = int.Parse(newMenuNo) + 1;
-                                newMenuNo = "00" + newMenuNoInt.ToString();
-                            }
-                            newLinkType = 1;
-                            newMenuLevel = 2;
-                        }
-                    }
-                }
-
-                newMenu.MenuNo = newMenuNo;
-                newMenu.LinkType = newLinkType;
-                newMenu.LinkName = MenuName;
-                if (newMenuLevel == 1)
-                {
-                    newMenu.LinkURL = null;
-                }
-                else
-                {
-                    newMenu.LinkURL = MenuLink;
-                }
-
-                if (form["SelectStatus"] == "Y")
-                {
-                    newMenu.Status = 1;
-                }
-                else { newMenu.Status = 0; }
-                newMenu.MenuLevel = newMenuLevel;
-                newMenu.CeateDate = DateTime.Now;
-                newMenu.Createuser = userName;
-                newMenu.ModifyDate = DateTime.Now;
-                newMenu.ModifyUser = userName;
-                db.Menus.Add(newMenu);
-                db.SaveChanges();
-            }
-            catch (Exception e) {
-                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
-                System.Diagnostics.Debug.WriteLine(e.ToString());
-                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
-            }
-
-            viewModel.ListA = db.Menus.ToList();
-            viewModel.ListC = db.Menus.ToList();
-
-            return View("Index", viewModel);
         }
 
         public void Submit(object sender, EventArgs e)
