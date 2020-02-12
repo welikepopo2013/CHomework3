@@ -131,7 +131,7 @@
                     <td>Status: </td>
                     <td>
                         <select name="SelectStatus">
-                            @if (@Model.ListA.First().LinkType == 0)
+                            @if (@Model.ListA.First().Status == 0)
                             {
                                 <option>N</option>
                                 <option>Y</option>
@@ -145,7 +145,7 @@
                     </td>
                     <td>Level: </td>
                     <td>
-                        <select name="SelectStatus">
+                        <select name="Menu_Level">
                             @if (@Model.ListA.First().MenuLevel == 0)
                             {
                                 <option>0</option>
