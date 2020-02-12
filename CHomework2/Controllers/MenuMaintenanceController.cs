@@ -74,13 +74,11 @@ namespace CHomework2.Controllers
                 }
                 else if (select_menu(form).Count() == 0)
                 {
-                    viewModel.ListA = db.Menus.ToList();
                     TempData["SelectionMessage"] = "Plese select atleast one menu to modify.";
                     return View("Index", viewModel);
                 }
                 else
                 {
-                    viewModel.ListA = db.Menus.ToList();
                     TempData["SelectionMessage"] = "Plese modify one menu at a time.";
                     return View("Index", viewModel);
                 }

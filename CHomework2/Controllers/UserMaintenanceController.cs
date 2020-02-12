@@ -25,33 +25,33 @@ namespace CHomework2.Controllers
         // GET: UserMaintenance
         public ActionResult Index()
         {
-            var roleList = db.Roles.ToList();
-            var userList = db.Users.ToList();
-            List<User> list = new List<User>();
             var viewModel = new User();
-            viewModel.ListA = roleList;
-            viewModel.ListB = list;
-
-            int loginAccount = (int)Session["LoginID"];
-            LoginInfo loginInfo = new LoginInfo();
-            viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
-
-            return View(viewModel);
+            viewModel.ListA = db.Roles.ToList();
+            viewModel.ListB = new List<User>();
+            try
+            {
+                int loginAccount = (int)Session["LoginID"];
+                viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+                return RedirectToAction("Index", "Login");
+            }
         }
-        User test = new User();
 
         [HttpPost]
         public ActionResult function(FormCollection form, object sender, EventArgs e)
         {
             var button = form["button"];
-            var roleList = db.Roles.ToList();
-            var userList = db.Users.ToList();
             var viewModel = new User();
-            String searchNames = form["userName"];
-            var roleSelect = form["SelectRole"];
-
             int loginAccount = (int)Session["LoginID"];
-            LoginInfo loginInfo = new LoginInfo();
+
+            viewModel.ListA = db.Roles.ToList();
+            viewModel.ListB = db.Users.ToList();
             viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
 
             if (button == "Query")
@@ -61,41 +61,22 @@ namespace CHomework2.Controllers
             }
             else if (button == "Add")
             {
-                viewModel.ListA = roleList;
-                viewModel.ListB = userList;
                 return View("Add", viewModel);
             }
             else if (button == "Modify")
             {
-                List<User> list = new List<User>();
-                var checkList = new List<String>();
-                if (form["checkbox"] != null)
+                if (select_user(form).Count() == 1)
                 {
-                    checkList = form["checkbox"].Split(',').ToList();
-                }
-                int intUser;
-                foreach (var user in checkList)
-                {
-                    intUser = int.Parse(user);
-                    list.Add(db.Users.Where(u => u.UserID == intUser).FirstOrDefault());
-                }
-                if (list.Count() == 1)
-                {
-                    viewModel.ListA = roleList;
-                    viewModel.ListB = list;
+                    viewModel.ListB = select_user(form);
                     return View("Modify", viewModel);
                 }
-                else if (list.Count() == 0)
+                else if (select_user(form).Count() == 0)
                 {
-                    viewModel.ListA = roleList;
-                    viewModel.ListB = userList;
                     TempData["SelectionMessage"] = "Plese select atleast one user to modify.";
                     return View("Index", viewModel);
                 }
                 else
                 {
-                    viewModel.ListA = roleList;
-                    viewModel.ListB = userList;
                     TempData["SelectionMessage"] = "Plese modify one user at a time.";
                     return View("Index", viewModel);
                 }
@@ -119,195 +100,187 @@ namespace CHomework2.Controllers
 
         public User query(FormCollection form)
         {
-            var roleList = db.Roles.ToList();
-            var userList = db.Users.ToList();
             var viewModel = new User();
-            List<User> list = new List<User>();
             String searchNames = form["userName"];
             var roleSelect = form["SelectRole"];
-
             int loginAccount = (int)Session["LoginID"];
-            LoginInfo loginInfo = new LoginInfo();
-            viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
 
-            if (searchNames != "" && roleSelect == "")
+            viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
+            viewModel.ListA = db.Roles.ToList();
+
+            try
             {
-                userList = db.Users.Where(u => u.UserName.Contains(searchNames)).ToList();
-                viewModel.ListA = roleList;
-                viewModel.ListB = userList;
-            }
-            else if (searchNames == "" && roleSelect != "")
-            {
-                if (roleSelect == "All")
+                if (searchNames != "" && roleSelect != "All")
                 {
-                    viewModel.ListA = roleList;
-                    viewModel.ListB = userList;
+                    viewModel.ListB = db.Users.Where(u => u.UserName.Contains(searchNames) && u.Role.RoleName == roleSelect).ToList();
                 }
-                else
+                if (searchNames == "" && roleSelect == "All")
                 {
-                    userList = db.Users.Where(u => u.Role.RoleName == roleSelect).ToList();
-                    viewModel.ListA = roleList;
-                    viewModel.ListB = userList;
+                    viewModel.ListB = db.Users.ToList();
+                }
+                if (searchNames != "" && roleSelect == "All")
+                {
+                    viewModel.ListB = db.Users.Where(u => u.UserName.Contains(searchNames)).ToList();
+                }
+                if (searchNames == "" && roleSelect != "All")
+                {
+                    viewModel.ListB = db.Users.Where(u => u.Role.RoleName == roleSelect).ToList();
                 }
             }
-            else if (searchNames != "" && roleSelect != "" && roleSelect == "All")
+            catch (Exception e)
             {
-                userList = db.Users.Where(u => u.UserName.Contains(searchNames)).ToList();
-                viewModel.ListA = roleList;
-                viewModel.ListB = userList;
-            }
-            else if (searchNames != "" && roleSelect != "" && roleSelect != "All")
-            {
-                userList = db.Users.Where(u => u.UserName.Contains(searchNames) && u.Role.RoleName == roleSelect).ToList();
-                viewModel.ListA = roleList;
-                viewModel.ListB = userList;
-            }
-            else
-            {
-                viewModel.ListA = roleList;
-                viewModel.ListB = list;
-                TempData["SelectionMessage"] = "Plese enter keyword in name field or select a role to filter the results.";
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+                viewModel.ListB = new List<User>();
             }
             return viewModel;
         }
+
         public ActionResult Add(FormCollection form, User user)
         {
-            var roleList = db.Roles.ToList();
-            var userList = db.Users.ToList();
             var viewModel = new User();
-            List<LoginInfo> existLogin = new List<LoginInfo>();
-            existLogin = db.LoginInfoes.ToList();
+            List<LoginInfo> existLogin = db.LoginInfoes.ToList();
 
             int loginID = (int)Session["LoginID"];
             var userInfo = db.Users.Where(l => l.UserID == loginID).FirstOrDefault();
             var userName = userInfo.UserID;
 
-            LoginInfo loginInfo = new LoginInfo();
             viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginID).FirstOrDefault();
+            viewModel.ListA = db.Roles.ToList();
 
-            String newUserName = form["userName"];
-            var selectRole = form["SelectRole"];
-            var selectStatus = form["SelectStatus"];
-            String loginAccount = form["LoginAccount"];
-            String loginPassword = form["LoginPassword"];
-
-            //MD5 encryption
-            MD5 md5 = new MD5CryptoServiceProvider();
-            md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(loginPassword));
-            byte[] result = md5.Hash;
-            StringBuilder strBuilder = new StringBuilder();
-            for (int i = 0; i < result.Length; i++)
+            try
             {
-                strBuilder.Append(result[i].ToString("x2"));
-            }
-            var md5_password = strBuilder.ToString();
+                var selectRole = form["SelectRole"];
+                var md5_password = md5Encrypt(form["LoginPassword"]);
 
-            foreach (var validation in existLogin)
-            {
-                if (loginAccount == validation.LoginName)
+                foreach (var validation in existLogin)
                 {
-                    viewModel.ListA = roleList;
-                    viewModel.ListB = userList;
-                    viewModel.ModifyMessage = "Login Account already exist please choose another one.";
-                    return View(viewModel);
+                    if (form["LoginAccount"] == validation.LoginName)
+                    {
+                        viewModel.ListB = db.Users.ToList();
+                        viewModel.ModifyMessage = "Login Account already exist please choose another one.";
+                        return View(viewModel);
+                    }
                 }
-            }
 
-            user.UserName = newUserName;
-            user.RoleID = db.Roles.Where(r => r.RoleName == selectRole).FirstOrDefault().RoleID;
-            if (selectStatus == "Y")
+                user.UserName = form["userName"];
+                user.RoleID = db.Roles.Where(r => r.RoleName == selectRole).FirstOrDefault().RoleID;
+                if (form["SelectStatus"] == "Y")
+                {
+                    user.Status = 1;
+                }
+                else { user.Status = 0; }
+                user.CreateDate = DateTime.Now;
+                user.CreateUser = userName;
+                user.ModifyDate = DateTime.Now;
+                user.ModifyUser = userName;
+
+                db.Users.Add(user);
+                LoginInfo account = new LoginInfo();
+                account.LoginName = form["LoginAccount"];
+                account.LoginPassword = md5_password;
+                account.UserID = user.UserID;
+                db.LoginInfoes.Add(account);
+                db.SaveChanges();
+            }
+            catch (Exception e)
             {
-                user.Status = 1;
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
             }
-            else { user.Status = 0; }
-            user.CreateDate = DateTime.Now;
-            user.CreateUser = userName;
-            user.ModifyDate = DateTime.Now;
-            user.ModifyUser = userName;
-
-            db.Users.Add(user);
-            LoginInfo account = new LoginInfo();
-            account.LoginName = loginAccount;
-            account.LoginPassword = md5_password;
-            account.UserID = user.UserID;
-            db.LoginInfoes.Add(account);
-
-            db.SaveChanges();
-
-            userList = db.Users.ToList();
-            viewModel.ListA = roleList;
-            viewModel.ListB = userList;
+            viewModel.ListB = db.Users.ToList();
             return View("Index", viewModel);
         }
+
+        public List<User> select_user(FormCollection form)
+        {
+            List<User> listCheck = new List<User>();
+            try
+            {
+                var checkList = new List<String>();
+                if (form["checkbox"] != null)
+                {
+                    checkList = form["checkbox"].Split(',').ToList();
+                }
+
+                foreach (var user in checkList)
+                {
+                    int int_user = Int32.Parse(user);
+                    listCheck.Add(db.Users.Where(u => u.UserID == int_user).FirstOrDefault());
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+            }
+            return listCheck;
+        }
+
         public ActionResult Modify(FormCollection form, User user)
         {
-            var roleList = db.Roles.ToList();
-            var userList = db.Users.ToList();
             var viewModel = new User();
-
             int loginID = (int)Session["LoginID"];
             var userInfo = db.LoginInfoes.Where(l => l.LoginID == loginID).FirstOrDefault().User;
             var userName = userInfo.UserID;
-
-            LoginInfo loginInfo = new LoginInfo();
-            viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginID).FirstOrDefault();
-
             var userID = int.Parse(form["userID"]);
-            var user_Name = form["userName"];
             var selectRole = form["SelectRole"];
-            var selectStatus = form["SelectStatus"];
 
+            viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginID).FirstOrDefault();
+            viewModel.ListA = db.Roles.ToList();
 
-            User Update_User = db.Users.SingleOrDefault(u => u.UserID == userID);
-            Update_User.UserName = user_Name;
-            Update_User.RoleID = db.Roles.Where(r => r.RoleName == selectRole).FirstOrDefault().RoleID;
-            if (selectStatus == "Y")
-            {
-                Update_User.Status = 1;
+            try {
+                User Update_User = db.Users.SingleOrDefault(u => u.UserID == userID);
+                Update_User.UserName = form["userName"];
+                Update_User.RoleID = db.Roles.Where(r => r.RoleName == selectRole).FirstOrDefault().RoleID;
+                if (form["SelectStatus"] == "Y")
+                {
+                    Update_User.Status = 1;
+                }
+                else { Update_User.Status = 0; }
+                Update_User.ModifyDate = DateTime.Now;
+                Update_User.ModifyUser = userName;
+                db.SaveChanges();
             }
-            else { Update_User.Status = 0; }
-            Update_User.ModifyDate = DateTime.Now;
-            Update_User.ModifyUser = userName;
-            db.SaveChanges();
-            userList = db.Users.ToList();
-            viewModel.ListA = roleList;
-            viewModel.ListB = userList;
+            catch (Exception e) {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+            }
+            viewModel.ListB = db.Users.ToList();
             return View("Index", viewModel);
         }
+
         public User delete(FormCollection form)
         {
-            var roleList = db.Roles.ToList();
-            var userList = db.Users.ToList();
             var viewModel = new User();
-            User dropUser = new User();
-            LoginInfo dropAccount = new LoginInfo();
-
             int loginAccount = (int)Session["LoginID"];
-            LoginInfo loginInfo = new LoginInfo();
+
             viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
+            viewModel.ListA = db.Roles.ToList();
 
-
-            var checkList = new List<String>();
-            if (form["checkbox"] != null)
-            {
-                checkList = form["checkbox"].Split(',').ToList();
+            try {
+                foreach (var user in select_user(form))
+                {
+                    User dropUser = db.Users.Where(u => u.UserID == user.UserID).FirstOrDefault();
+                    LoginInfo dropAccount = db.LoginInfoes.Where(l => l.User.UserID == dropUser.UserID).FirstOrDefault();
+                    db.Users.Remove(dropUser);
+                    db.LoginInfoes.Remove(dropAccount);
+                    db.SaveChanges();
+                }
             }
-            int intUser;
-            foreach (var user in checkList)
-            {
-                intUser = int.Parse(user);
-                dropUser = db.Users.Where(u => u.UserID == intUser).FirstOrDefault();
-                dropAccount = db.LoginInfoes.Where(l => l.User.UserID == dropUser.UserID).FirstOrDefault();
-                db.Users.Remove(dropUser);
-                db.LoginInfoes.Remove(dropAccount);
-                db.SaveChanges();
-
+            catch (Exception e) {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
             }
-            userList = db.Users.ToList();
-            viewModel.ListA = roleList;
-            viewModel.ListB = userList;
+            viewModel.ListB = db.Users.ToList();
             return viewModel;
         }
+
         public void Submit(object sender, EventArgs e)
         {
             string UserJSON = Request.Form["UserJSON"];
@@ -350,6 +323,30 @@ namespace CHomework2.Controllers
                 }
             }
             catch (Exception error) { }
+        }
+        //MD5 Encryption
+        public String md5Encrypt(String text)
+        {
+            try
+            {
+                MD5 md5 = new MD5CryptoServiceProvider();
+                md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
+                byte[] result = md5.Hash;
+                StringBuilder strBuilder = new StringBuilder();
+                for (int i = 0; i < result.Length; i++)
+                {
+                    strBuilder.Append(result[i].ToString("x2"));
+                }
+                var md5_text = strBuilder.ToString();
+                return md5_text;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+                return text;
+            }
         }
     }
 }

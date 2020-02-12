@@ -45,6 +45,7 @@ namespace CHomework2.Controllers
 
             viewModel.sideNav = db.LoginInfoes.Where(l => l.LoginID == loginID).FirstOrDefault();
             viewModel.ListA = db.Roles.ToList();
+            viewModel.ListB = db.Roles.ToList();
 
             if (button == "Query")
             {
@@ -64,13 +65,11 @@ namespace CHomework2.Controllers
                 }
                 else if (select_role(form).Count() == 0)
                 {
-                    viewModel.ListB = db.Roles.ToList();
                     TempData["SelectionMessage"] = "Plese select atleast one role to modify.";
                     return View("Index", viewModel);
                 }
                 else
                 {
-                    viewModel.ListB = db.Roles.ToList();
                     TempData["SelectionMessage"] = "Plese modify one role at a time.";
                     return View("Index", viewModel);
                 }
@@ -92,7 +91,6 @@ namespace CHomework2.Controllers
                 }
                 else
                 {
-                    viewModel.ListB = db.Roles.ToList();
                     TempData["SelectionMessage"] = "Plese modify one role at a time.";
                     return View("Index", viewModel);
                 }

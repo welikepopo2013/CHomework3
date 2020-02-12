@@ -120,16 +120,24 @@ namespace CHomework2.Controllers
         //MD5 Encryption
         public String md5Encrypt(String text)
         {
-            MD5 md5 = new MD5CryptoServiceProvider();
-            md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
-            byte[] result = md5.Hash;
-            StringBuilder strBuilder = new StringBuilder();
-            for (int i = 0; i < result.Length; i++)
-            {
-                strBuilder.Append(result[i].ToString("x2"));
+            try {
+                MD5 md5 = new MD5CryptoServiceProvider();
+                md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
+                byte[] result = md5.Hash;
+                StringBuilder strBuilder = new StringBuilder();
+                for (int i = 0; i < result.Length; i++)
+                {
+                    strBuilder.Append(result[i].ToString("x2"));
+                }
+                var md5_text = strBuilder.ToString();
+                return md5_text;
             }
-            var md5_text = strBuilder.ToString();
-            return md5_text;
+            catch (Exception e) {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+                return text;
+            }
         }
     }
 }
