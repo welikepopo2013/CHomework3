@@ -1,8 +1,6 @@
 ﻿using CHomework2.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CHomework2.Controllers
@@ -13,10 +11,27 @@ namespace CHomework2.Controllers
         // GET: SystemSetup
         public ActionResult Index()
         {
-            int loginAccount = (int)Session["LoginID"];
-            LoginInfo loginInfo = new LoginInfo();
-            loginInfo = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
-            return View(loginInfo);
+            if (Session["LoginID"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            else
+            {
+                try
+                {
+                    int loginAccount = (int)Session["LoginID"];
+                    LoginInfo loginInfo = new LoginInfo();
+                    loginInfo = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
+                    return View(loginInfo);
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                    System.Diagnostics.Debug.WriteLine(e.ToString());
+                    System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+                    return RedirectToAction("Index", "Login");
+                }
+            }
         }
     }
 }
