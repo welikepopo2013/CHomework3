@@ -4,20 +4,21 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2269b399d31a46a68bd7ab4bb47901f6" Name="Diagram1">
-        <EntityTypeShape EntityType="SystemDataModel.LoginInfo" Width="1.5" PointX="7.5" PointY="2.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="SystemDataModel.Menu" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SystemDataModel.Role" Width="1.5" PointX="3" PointY="1.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SystemDataModel.User" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="SystemDataModel.FK_LoginInfo_User" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.FK_Menu_User" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.FK_Menu_User1" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.FK_Role_User" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.FK_Role_User1" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.FK_User_Role" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.FK_User_User" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.FK_User_User1" ManuallyRouted="false" />
-        <AssociationConnector Association="SystemDataModel.Role_Menu" ManuallyRouted="false" />
+      <Diagram DiagramId="ec467abcdacc44ee9eb71f0fd8b72486" Name="Diagram1">
+        <EntityTypeShape EntityType="SystemDataBaseEntity.LoginInfo" Width="1.5" PointX="7.5" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SystemDataBaseEntity.Menu" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SystemDataBaseEntity.Role" Width="1.5" PointX="3" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SystemDataBaseEntity.sysdiagram" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SystemDataBaseEntity.User" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_LoginInfo_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_Menu_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_Menu_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_Role_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_Role_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_User_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_User_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.FK_User_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="SystemDataBaseEntity.Role_Menu" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

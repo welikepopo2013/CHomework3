@@ -28,7 +28,9 @@ namespace CHomework2.Models
         public string LoginPassword { get; set; }
 
         public int UserID { get; set; }
-    
+
+        public string HomeContent { get; set; }
+
         public virtual User User { get; set; }
 
         [DisplayName("New Password")]

@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Albert.P.Su\Desktop\c#Homework\CHomework2\CHomework2\Models\SystemDataBaseEntity.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\Albert.P.Su\Desktop\Acer\Acer_Training\C#Homework\c#Homework\CHomework2\CHomework2\Models\SystemDataBaseEntity.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

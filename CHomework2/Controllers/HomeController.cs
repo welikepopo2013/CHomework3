@@ -9,7 +9,7 @@ namespace CHomework2.Controllers
 {
     public class HomeController : Controller
     {
-        SystemDataBaseEntity db = new SystemDataBaseEntity();
+        Trainee13Entities1 db = new Trainee13Entities1();
         // GET: Home
         public ActionResult Index()
         {
@@ -38,6 +38,27 @@ namespace CHomework2.Controllers
                 }
             }
         }
+
+        public ActionResult function(FormCollection form) {
+            int loginAccount = (int)Session["LoginID"];
+            LoginInfo loginInfo = new LoginInfo();
+            loginInfo = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
+            var content = form["ckContent"];
+            try
+            {
+                loginInfo.HomeContent = content;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("--System Eror - Exception--");
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine("--System Eror - End--");
+            }
+            loginInfo = db.LoginInfoes.Where(l => l.LoginID == loginAccount).FirstOrDefault();
+            return View("Index", loginInfo);
+        }
+
 
         //to access the password change page with the correct login user info 
         public ActionResult ChangePassword()

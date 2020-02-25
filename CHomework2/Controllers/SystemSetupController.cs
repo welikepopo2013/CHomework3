@@ -7,7 +7,7 @@ namespace CHomework2.Controllers
 {
     public class SystemSetupController : Controller
     {
-        SystemDataBaseEntity db = new SystemDataBaseEntity();
+        Trainee13Entities1 db = new Trainee13Entities1();
         // GET: SystemSetup
         public ActionResult Index()
         {

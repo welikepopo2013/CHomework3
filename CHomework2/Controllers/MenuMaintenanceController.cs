@@ -13,7 +13,7 @@ namespace CHomework2.Controllers
 {
     public class MenuMaintenanceController : Controller
     {
-        SystemDataBaseEntity db = new SystemDataBaseEntity();
+        Trainee13Entities1 db = new Trainee13Entities1();
         // GET: MenuMaintenance
         public ActionResult Index()
         {
@@ -378,7 +378,6 @@ namespace CHomework2.Controllers
                 IRow row1 = sheet1.CreateRow(0);
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-
                     ICell cell = row1.CreateCell(j);
                     String columnName = dt.Columns[j].ToString();
                     cell.SetCellValue(columnName);

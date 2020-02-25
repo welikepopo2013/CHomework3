@@ -16,7 +16,7 @@ namespace CHomework2.Controllers
 {
     public class UserMaintenanceController : Controller
     {
-        SystemDataBaseEntity db = new SystemDataBaseEntity();
+        Trainee13Entities1 db = new Trainee13Entities1();
 
         // GET: UserMaintenance
         public ActionResult Index()

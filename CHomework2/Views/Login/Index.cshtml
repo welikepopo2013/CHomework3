@@ -7,73 +7,96 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Login</title>
-    <style>
-        #login-div {
-            position: absolute;
-            left: 40%;
-            top: 40%;
-            border: 1px solid #ccc;
-            padding: 10px 10px;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Home</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- TableSorter-->
+    <script src="~/Scripts/tablesorter.js"></script>
+    <!-- Initializing TableSorter-->
+    <script>
+        $(document).ready(function () {
+            $("#myTable").tablesorter();
+        });
+    </script>
+    <script src="~/Themes/ckeditor/ckeditor.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/style.css">
 </head>
 <body>
-    <div id="login-div">
-        @using (Html.BeginForm("Autherize", "Login", FormMethod.Post))
-        {
-            <table>
-                <tr>
-                    <td></td>
-                    <td style="text-decoration: underline">App Name</td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.LabelFor(model => model.LoginName)
-                    </td>
-                    <td>
-                        @Html.EditorFor(model => model.LoginName,
-                   new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.LoginName } })
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>@Html.ValidationMessageFor(model => model.LoginName)</td>
-                </tr>
-                <tr>
-                    <td>@Html.LabelFor(model => model.LoginPassword)</td>
-                    <td>
-                        @Html.EditorFor(model => model.LoginPassword,
-                   new { htmlAttributes = new { @class = "form-control", @Value =  ViewBag.LoginPassword } })
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>@Html.ValidationMessageFor(model => model.LoginPassword)</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        @Html.CheckBoxFor(model => model.Remember)
-                        @Html.LabelFor(model => model.Remember)
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <label class=" field-validation-error">
-                            @Html.DisplayFor(model => model.LoginErrorMessage)
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <input type="submit" name="name" value="Login" />
-                    </td>
-                </tr>
-            </table>
-        }
+
+    <div class="wrapper d-flex align-items-stretch">
+        <div class="wrapper d-flex align-items-stretch">
+            <div class="container-fluid">
+                <div id="content" class="p-4 p-md-5 pt-5">
+                    <div id="login-div">
+                        @using (Html.BeginForm("Autherize", "Login", FormMethod.Post))
+                        {
+                            <div class="table-responsive">
+                                <table>
+                                    <tr>
+                                        <td></td>
+                                        <td style="text-decoration: underline">App Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @Html.LabelFor(model => model.LoginName)
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.LoginName,
+                                       new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.LoginName } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>@Html.ValidationMessageFor(model => model.LoginName)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.LabelFor(model => model.LoginPassword)</td>
+                                        <td>
+                                            @Html.EditorFor(model => model.LoginPassword,
+                                       new { htmlAttributes = new { @class = "form-control", @Value =  ViewBag.LoginPassword } })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>@Html.ValidationMessageFor(model => model.LoginPassword)</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            @Html.CheckBoxFor(model => model.Remember)
+                                            @Html.LabelFor(model => model.Remember)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <label class=" field-validation-error">
+                                                @Html.DisplayFor(model => model.LoginErrorMessage)
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <input type="submit" name="name" value="Login" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

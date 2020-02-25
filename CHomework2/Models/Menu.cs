@@ -40,7 +40,7 @@ namespace CHomework2.Models
         public Nullable<int> Createuser { get; set; }
         public Nullable<System.DateTime> ModifyDate { get; set; }
         public Nullable<int> ModifyUser { get; set; }
-    
+
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }
         public virtual ICollection<Role> Roles { get; set; }

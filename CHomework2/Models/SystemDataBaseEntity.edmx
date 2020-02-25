@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SystemDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="SystemDataBaseEntity.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="LoginInfo">
           <Key>
             <PropertyRef Name="LoginID" />
@@ -13,6 +13,7 @@
           <Property Name="LoginName" Type="varchar" MaxLength="50" />
           <Property Name="LoginPassword" Type="varchar" MaxLength="100" />
           <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="HomeContent" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Menu">
           <Key>
@@ -49,6 +50,16 @@
           </Key>
           <Property Name="RoleID" Type="int" Nullable="false" />
           <Property Name="MenuNo" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -183,11 +194,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="SystemDataModelStoreContainer">
+        <EntityContainer Name="SystemDataBaseEntityStoreContainer">
           <EntitySet Name="LoginInfo" EntityType="Self.LoginInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Menu" EntityType="Self.Menu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role_Menu" EntityType="Self.Role_Menu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_LoginInfo_User" Association="Self.FK_LoginInfo_User">
             <End Role="User" EntitySet="User" />
@@ -234,7 +246,7 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="SystemDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="SystemDataBaseEntity" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="LoginInfo">
           <Key>
             <PropertyRef Name="LoginID" />
@@ -243,6 +255,7 @@
           <Property Name="LoginName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="LoginPassword" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="HomeContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_LoginInfo_User" FromRole="LoginInfo" ToRole="User" />
         </EntityType>
         <EntityType Name="Menu">
@@ -279,6 +292,16 @@
           <NavigationProperty Name="User1" Relationship="Self.FK_Role_User1" FromRole="Role" ToRole="User" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_Role" FromRole="Role" ToRole="User" />
           <NavigationProperty Name="Menus" Relationship="Self.Role_Menu" FromRole="Role" ToRole="Menu" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -403,10 +426,11 @@
           <End Role="Menu" Type="Self.Menu" Multiplicity="*" />
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="SystemDataBaseEntity" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Trainee13Entities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="LoginInfoes" EntityType="Self.LoginInfo" />
           <EntitySet Name="Menus" EntityType="Self.Menu" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <AssociationSet Name="FK_LoginInfo_User" Association="Self.FK_LoginInfo_User">
             <End Role="User" EntitySet="Users" />
@@ -450,19 +474,20 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="SystemDataModelStoreContainer" CdmEntityContainer="SystemDataBaseEntity">
+        <EntityContainerMapping StorageEntityContainer="SystemDataBaseEntityStoreContainer" CdmEntityContainer="Trainee13Entities1">
           <EntitySetMapping Name="LoginInfoes">
-            <EntityTypeMapping TypeName="SystemDataModel.LoginInfo">
+            <EntityTypeMapping TypeName="SystemDataBaseEntity.LoginInfo">
               <MappingFragment StoreEntitySet="LoginInfo">
                 <ScalarProperty Name="LoginID" ColumnName="LoginID" />
                 <ScalarProperty Name="LoginName" ColumnName="LoginName" />
                 <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="HomeContent" ColumnName="HomeContent" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Menus">
-            <EntityTypeMapping TypeName="SystemDataModel.Menu">
+            <EntityTypeMapping TypeName="SystemDataBaseEntity.Menu">
               <MappingFragment StoreEntitySet="Menu">
                 <ScalarProperty Name="MenuNo" ColumnName="MenuNo" />
                 <ScalarProperty Name="LinkType" ColumnName="LinkType" />
@@ -478,7 +503,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="SystemDataModel.Role">
+            <EntityTypeMapping TypeName="SystemDataBaseEntity.Role">
               <MappingFragment StoreEntitySet="Role">
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
@@ -491,8 +516,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="SystemDataBaseEntity.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="SystemDataModel.User">
+            <EntityTypeMapping TypeName="SystemDataBaseEntity.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -505,7 +541,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="Role_Menu" TypeName="SystemDataModel.Role_Menu" StoreEntitySet="Role_Menu">
+          <AssociationSetMapping Name="Role_Menu" TypeName="SystemDataBaseEntity.Role_Menu" StoreEntitySet="Role_Menu">
             <EndProperty Name="Menu">
               <ScalarProperty Name="MenuNo" ColumnName="MenuNo" />
             </EndProperty>

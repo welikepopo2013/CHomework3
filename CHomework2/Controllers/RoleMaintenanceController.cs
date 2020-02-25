@@ -13,7 +13,7 @@ namespace CHomework2.Controllers
 {
     public class RoleMaintenanceController : Controller
     {
-        SystemDataBaseEntity db = new SystemDataBaseEntity();
+        Trainee13Entities1 db = new Trainee13Entities1();
         // GET: RoleMaintenance
         public ActionResult Index()
         {

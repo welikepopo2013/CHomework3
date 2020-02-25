@@ -13,10 +13,10 @@ namespace CHomework2.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class SystemDataBaseEntity : DbContext
+    public partial class Trainee13Entities1 : DbContext
     {
-        public SystemDataBaseEntity()
-            : base("name=SystemDataBaseEntity")
+        public Trainee13Entities1()
+            : base("name=Trainee13Entities1")
         {
         }
     
@@ -28,6 +28,7 @@ namespace CHomework2.Models
         public DbSet<LoginInfo> LoginInfoes { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<sysdiagram> sysdiagrams { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }

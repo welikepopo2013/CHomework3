@@ -10,73 +10,11 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>MenuMaintenance</title>
-    <style>
-        body {
-            font-family: "Lato", sans-serif;
-        }
-
-        /* Fixed sidenav, full height */
-        .sidenav {
-            height: 100%;
-            width: 300px;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            padding-top: 20px;
-        }
-
-            /* Style the sidenav links and the dropdown button */
-            .sidenav a, .dropdown-btn {
-                padding: 6px 8px 6px 16px;
-                text-decoration: none;
-                font-size: 20px;
-                color: #818181;
-                display: block;
-                border: none;
-                background: none;
-                width: 100%;
-                text-align: left;
-                cursor: pointer;
-                outline: none;
-            }
-
-                /* On mouse-over */
-                .sidenav a:hover, .dropdown-btn:hover {
-                    color: #f1f1f1;
-                }
-
-        /* Main content */
-        .main {
-            margin-left: 300px; /* Same as the width of the sidenav */
-            font-size: 20px; /* Increased text to enable scrolling */
-            padding: 0px 10px;
-        }
-
-        /* Add an active class to the active dropdown button */
-        .active {
-            background-color: green;
-            color: white;
-        }
-
-        /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
-        .dropdown-container {
-            display: none;
-            background-color: #262626;
-            padding-left: 8px;
-        }
-
-        /* Optional: Style the caret down icon */
-        .fa-caret-down {
-            float: right;
-            padding-right: 8px;
-        }
-    </style>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
@@ -92,107 +30,103 @@
             $("#myTable").tablesorter();
         });
     </script>
+    <script src="~/Themes/ckeditor/ckeditor.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
 
-    <!-- Styling -->
-    <style>
-        th.headerSortUp {
-            background-image: url(/image/asc.gif);
-            background-color: #3399FF;
-            background-repeat: no-repeat;
-            background-position: center right;
-        }
-
-        th.headerSortDown {
-            background-image: url(/image/desc.gif);
-            background-color: #3399FF;
-            background-repeat: no-repeat;
-            background-position: center right;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/style.css">
 </head>
 <body>
-    <div class="sidenav">
-        <a href="/Home">Home</a>
-        @foreach (var title in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 1).OrderBy(m => m.MenuNo))
-        {
-            <button class="dropdown-btn">
-                @title.LinkName
-                <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-container">
-                @foreach (var menu in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 2 && m.MenuNo.Contains(title.MenuNo)))
-                {
-                    if (menu.Status == 1) {<a href="@menu.LinkURL">@menu.LinkName</a> }
-                    
-                }
+    <div class="wrapper d-flex align-items-stretch">
+        <div class="wrapper d-flex align-items-stretch">
+            <nav id="sidebar">
+                <div class="custom-menu">
+                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                        <i class="fa fa-bars"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                </div>
+                <div class="p-4 pt-5">
+                    <h1><a href="/Home" class="logo">Home</a></h1>
+                    <ul class="list-unstyled components mb-5">
+
+                        @foreach (var title in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 1).OrderBy(m => m.MenuNo))
+                        {
+                            <li class="active">
+                                <a href="#m" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">@title.LinkName</a>
+                                <ul class="collapse list-unstyled" id="m">
+
+                                    @foreach (var menu in Model.sideNav.User.Role.Menus.Where(m => m.MenuLevel == 2 && m.MenuNo.Contains(title.MenuNo)))
+                                    {
+                                        if (menu.Status == 1)
+                                        {
+                                            <li>
+                                                <a href="@menu.LinkURL">@menu.LinkName</a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                <div id="content" class="p-4 p-md-5 pt-5">
+                    <h2 class="mb-4">Menu Maintenance --> Add</h2>
+                    @using (Html.BeginForm("Add", "MenuMaintenance", FormMethod.Post))
+                    {
+                    <div class="table-responsive">
+                        <table>
+                            <tr>
+                                <td>@Html.LabelFor(model => model.LinkName)</td>
+                                <td><input name="menuName"></td>
+                            </tr>
+                            <tr>
+                                <td>@Html.LabelFor(model => model.Status)</td>
+                                <td>
+                                    <select name="SelectMenu">
+                                        <option>This is a new Menu Group</option>
+                                        @foreach (var item in Model.ListA)
+                                        {
+                                            <option>@item.LinkName</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Link URL</td>
+                                <td><input value="/SystemSetup/Index" disabled></td>
+                                <td><input type="hidden" name="LinkURL" value="/SystemSetup/Index"></td>
+                            </tr>
+                            <tr>
+                                <td>@Html.LabelFor(model => model.Status)</td>
+                                <td>
+                                    <select name="SelectStatus">
+                                        <option>Y</option>
+                                        <option>N</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="submit" name="name" value="Save" />
+                                    <input type="button" value="Back" onclick="history.back()">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>                     
+                    }
+                </div>
             </div>
-        }
+        </div>
     </div>
 
     <div class="main">
-        <h2>Menu Maintenance --> Add</h2>
-        @using (Html.BeginForm("Add", "MenuMaintenance", FormMethod.Post))
-        {
-            <table>
-                <tr>
-                    <td>@Html.LabelFor(model => model.LinkName)</td>
-                    <td><input name="menuName"></td>
-                </tr>
-                <tr>
-                    <td>@Html.LabelFor(model => model.Status)</td>
-                    <td>
-                        <select name="SelectMenu">
-                            <option>This is a new Menu Group</option>
-                            @foreach (var item in Model.ListA)
-                            {
-                                <option>@item.LinkName</option>
-                            }         
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Link URL</td>
-                    <td><input value="/SystemSetup/Index" disabled></td>
-                    <td><input type="hidden" name="LinkURL" value="/SystemSetup/Index"></td>
-                </tr>
-                <tr>
-                    <td>@Html.LabelFor(model => model.Status)</td>
-                    <td>
-                        <select name="SelectStatus">
-                            <option>Y</option>
-                            <option>N</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="submit" name="name" value="Save" />
-                        <input type="button" value="Back" onclick="history.back()">
-                    </td>
-                </tr>
-
-
-            </table>
-        }
+        
     </div>
 
     <script>
-        /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
-        var dropdown = document.getElementsByClassName("dropdown-btn");
-        var i;
-
-        for (i = 0; i < dropdown.length; i++) {
-            dropdown[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var dropdownContent = this.nextElementSibling;
-                if (dropdownContent.style.display === "block") {
-                    dropdownContent.style.display = "none";
-                } else {
-                    dropdownContent.style.display = "block";
-                }
-            });
-        }
-
         function toggle(source) {
             checkboxes = document.getElementsByName('checkbox');
             for (var i = 0, n = checkboxes.length; i < n; i++) {
@@ -200,5 +134,10 @@
             }
         }
     </script>
+    <script src="~/jquery.min.js"></script>
+    <script src="~/js/popper.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/main.js"></script>
+
 </body>
 </html>

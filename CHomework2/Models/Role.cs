@@ -11,7 +11,7 @@ namespace CHomework2.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Role
     {
         public Role()
@@ -19,7 +19,7 @@ namespace CHomework2.Models
             this.Users = new HashSet<User>();
             this.Menus = new HashSet<Menu>();
         }
-    
+
         public int RoleID { get; set; }
         public string RoleName { get; set; }
         public string RoleDescription { get; set; }
@@ -28,7 +28,7 @@ namespace CHomework2.Models
         public Nullable<int> CreateUser { get; set; }
         public Nullable<System.DateTime> ModifyDate { get; set; }
         public Nullable<int> ModifyUser { get; set; }
-    
+
         public virtual User User { get; set; }
         public virtual User User1 { get; set; }
         public virtual ICollection<User> Users { get; set; }
